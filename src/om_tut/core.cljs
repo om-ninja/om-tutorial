@@ -1,6 +1,6 @@
 (ns ^:figwheel-always om-tut.core
     (:require[om.core :as om :include-macros true]
-              [om.dom :as dom :include-macros true]))
+             [sablono.core :refer-macros [html]]))
 
 (enable-console-print!)
 
@@ -14,7 +14,7 @@
   (fn [data owner]
     (reify om/IRender
       (render [_]
-        (dom/h1 nil (:text data)))))
+        (html [:h1 (:text data)]))))
   app-state
   {:target (. js/document (getElementById "app"))})
 
