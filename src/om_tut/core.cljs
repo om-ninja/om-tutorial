@@ -8,14 +8,17 @@
 
 ;; define your app data so that it doesn't get over-written on reload
 
-(defonce app-state (atom {:text "Hello world!"}))
+(defonce app-state (atom {:text "Hello World!"}))
 
-(om/root
-  (fn [data owner]
-    (reify om/IRender
-      (render [_]
-        (html [:h1 (:text data)]))))
-  app-state
-  {:target (. js/document (getElementById "app"))})
+(defn hello-component
+  [data owner]
+  (reify
+    om/IRender
+    (render [_]
+      (html [:p (:text data)]))))
+
+(om/root hello-component
+         app-state
+         {:target (. js/document (getElementById "app"))})
 
 
