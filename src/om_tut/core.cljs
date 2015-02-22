@@ -15,7 +15,7 @@
   (reify
     om/IRender
     (render [_]
-      (html [:p (:text data)]))))
+      (html [:h1 (:text data)]))))
 
 (om/root hello-component
          app-state
