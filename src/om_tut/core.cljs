@@ -12,10 +12,8 @@
 
 (defn hello-component
   [data owner]
-  (reify
-    om/IRender
-    (render [_]
-      (html [:h1 (:text data)]))))
+  (om/component
+   (html [:h1 (:text data)])))
 
 (om/root hello-component
          app-state
