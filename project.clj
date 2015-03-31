@@ -9,7 +9,9 @@
                  [figwheel "0.2.3-SNAPSHOT"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [sablono "0.2.3"]
+                 [alandipert/storage-atom "1.2.4"]
                  [org.omcljs/om "0.8.6"]]
+
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-figwheel "0.2.3-SNAPSHOT"]]
@@ -17,7 +19,7 @@
   :source-paths ["src"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
-  
+
   :cljsbuild {
     :builds [{:id "dev"
               :source-paths ["src" "dev_src"]
