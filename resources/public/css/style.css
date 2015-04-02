@@ -7,3 +7,9 @@ span.done {
   color: grey;
   text-decoration: line-through;
 }
+li.todo {
+  list-style-type: none;
+}
+li.todo > span {
+  margin-left: 5px;
+}

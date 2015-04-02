@@ -23,13 +23,14 @@
 (defn todo-item [todo owner]
   (om/component
    (let [cls (if (:done todo) "done" "")
-         done! (fn [todo] (update todo :done not))]
+         toggle (fn [todo] (update todo :done not))]
      (html
       [:li {:class "todo"}
-       [:span {:class cls} (:text todo)]
-       [:button {:on-click (fn [event]
-                             (om/transact! todo done!))}
-        (if (:done todo) "Not Done" "Done")]]))))
+       [:input {:class "toggle"
+                :type "checkbox"
+                :checked (:done todo)
+                :on-click #(om/transact! todo toggle)}]
+       [:span {:class cls} (:text todo)]]))))
 
 (defn add-todo [text todos]
   (conj todos {:text text :done false}))
