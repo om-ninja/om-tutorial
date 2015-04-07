@@ -29,7 +29,7 @@
        [:input {:class "toggle"
                 :type "checkbox"
                 :checked (:done todo)
-                :on-click #(om/transact! todo toggle)}]
+                :on-change #(om/transact! todo toggle)}]
        [:span {:class cls} (:text todo)]]))))
 
 (defn add-todo [text todos]
@@ -48,13 +48,37 @@
                                      (partial add-todo (.-value input)))
                        (set! (.-value input) ""))))}])))
 
+(defn bottom-bar [todos owner]
+  (om/component
+   (html
+    (let [not-done-count (count (remove :done todos))
+          done-count (count (filter :done todos))
+          remove-done (fn [todos]
+                        (vec (remove :done todos)))]
+      [:div.bottom-bar
+       (str not-done-count " items left")
+       (if (pos? done-count)
+         [:button
+          {:on-click #(om/transact! todos remove-done)}
+          "Clear completed"])]))))
+
+(defn mark-all-as-done [todos owner]
+  (om/component
+   (html
+    (let [mark-all-done (fn [todos]
+                          (mapv #(assoc % :done true) todos))]
+      [:button {:on-click #(om/transact! todos mark-all-done)}
+       "Mark all as done!"]))))
+
 (defn todo-list [data owner]
   (om/component
    (html
     [:div
      [:h2 "Things to be done"]
+     (om/build mark-all-as-done (:todos data))
      [:ul (om/build-all todo-item (:todos data))]
-     (om/build todo-adder (:todos data))])))
+     (om/build todo-adder (:todos data))
+     (om/build bottom-bar (:todos data))])))
 
 (om/root todo-list
          app-state
