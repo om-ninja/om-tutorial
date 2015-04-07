@@ -84,8 +84,9 @@
     (let [all-done? (every? identity (map :done todos))
           mark-as (fn [value todos]
                     (mapv #(assoc % :done value) todos))]
-      [:button.mark-as-done
-       {:class (when all-done? "active")
+      [:a.mark-as-done
+       {:href "#"
+        :class (when all-done? "active")
         :on-click #(om/transact!
                     todos
                     (partial mark-as (not all-done?)))}
@@ -105,7 +106,7 @@
   (om/component
    (html
     [:div.todos
-     [:h2 "todos"]
+     [:h1 "todos"]
      [:div.top-bar
       (om/build mark-all-as-done (:todos data))
       (om/build todo-adder (:todos data))]
