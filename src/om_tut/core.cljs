@@ -40,7 +40,7 @@
    (html
     [:input
      {:type "text"
-      :placeholder "What needs doing?"
+      :placeholder "What needs to be done?"
       :on-key-up (fn [event]
                    (let [input (.-target event)]
                      (when (= 13 (.-keyCode event)) ;; ENTER
@@ -65,19 +65,25 @@
 (defn mark-all-as-done [todos owner]
   (om/component
    (html
-    (let [mark-all-done (fn [todos]
-                          (mapv #(assoc % :done true) todos))]
-      [:button {:on-click #(om/transact! todos mark-all-done)}
-       "Mark all as done!"]))))
+    (let [all-done? (every? identity (map :done todos))
+          mark-as (fn [value todos]
+                    (mapv #(assoc % :done value) todos))]
+      [:button.mark-as-done
+       {:class (when all-done? "active")
+        :on-click #(om/transact!
+                    todos
+                    (partial mark-as (not all-done?)))}
+       "✔"]))))
 
 (defn todo-list [data owner]
   (om/component
    (html
-    [:div
-     [:h2 "Things to be done"]
-     (om/build mark-all-as-done (:todos data))
+    [:div.todos
+     [:h2 "todos"]
+     [:div.top-bar
+      (om/build mark-all-as-done (:todos data))
+      (om/build todo-adder (:todos data))]
      [:ul (om/build-all todo-item (:todos data))]
-     (om/build todo-adder (:todos data))
      (om/build bottom-bar (:todos data))])))
 
 (om/root todo-list
