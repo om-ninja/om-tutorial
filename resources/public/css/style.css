@@ -13,14 +13,19 @@ li.todo {
 li.todo > span {
   margin-left: 5px;
 }
-h2 {
+h1 {
   color: rgba(175, 47, 47, 0.15);
   text-align: center;
   font-weight: 100;
+  font-size: 3em;
+}
+a {
+  text-decoration: none;
 }
 /* App parent */
 div#todos {
   display:flex;
+  font-size: 1.3em;
 }
 /* Inner container */
 div.todos {
@@ -34,20 +39,17 @@ div.todos {
   border: 1px solid #ededed;
   width: 100%;
   height: 50px;
+  display: flex;
+  align-items: center;
 }
-.top-bar > input {
-  width: 80%;
-  height: 48px;
+.top-bar input {
+  flex: 1;
+  border: none;
   padding-left: 10px;
-  border: none;
-  font-size: 1.3em;
-}
-.top-bar > button {
-  height: 50px;
-  border: none;
-  background: none;
+  font-size: 1.1em;
 }
 .mark-as-done {
+  font-size: .7em;
   color: #ddd;
   padding:10px;
 }
@@ -62,7 +64,6 @@ input:-moz-placeholder { font-style: italic; }
 /* Todos body */
 div.todos ul {
   width: 100%;
-  font-size: 1.3em;
   display:flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -90,7 +91,7 @@ li.todo > span {
 /* Bottom bar */
 .bottom-bar {
   display: flex;
-  font-size: .8em;
+  font-size: .6em;
   justify-content: space-between;
   padding: 5px;
 }
