@@ -92,4 +92,29 @@ li.todo > span {
   display: flex;
   font-size: .8em;
   justify-content: space-between;
+  padding: 5px;
+}
+.bottom-bar a {
+  text-decoration: none;
+  color: #333;
+  padding: 2px;
+}
+/* Clear completed */
+.bottom-bar a:hover {
+  text-decoration: underline;
+}
+.bottom-bar a.invisible {
+  color: #fff;
+}
+/* Filters: All / Active / Completed */
+.bottom-bar .filters a {
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+.bottom-bar .filters a:hover {
+  border-color: rgba(175, 47, 47, 0.1);
+  text-decoration: none;
+}
+.bottom-bar .filters a.active {
+  border-color: rgba(175, 47, 47, 0.2)
 }
