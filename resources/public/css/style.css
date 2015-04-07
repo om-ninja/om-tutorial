@@ -13,3 +13,83 @@ li.todo {
 li.todo > span {
   margin-left: 5px;
 }
+h2 {
+  color: rgba(175, 47, 47, 0.15);
+  text-align: center;
+  font-weight: 100;
+}
+/* App parent */
+div#todos {
+  display:flex;
+}
+/* Inner container */
+div.todos {
+  margin: auto;
+  display:flex;
+  width: 500px;
+  flex-direction:column;
+}
+/* Top bar */
+.top-bar {
+  border: 1px solid #ededed;
+  width: 100%;
+  height: 50px;
+}
+.top-bar > input {
+  width: 80%;
+  height: 48px;
+  padding-left: 10px;
+  border: none;
+  font-size: 1.3em;
+}
+.top-bar > button {
+  height: 50px;
+  border: none;
+  background: none;
+}
+.mark-as-done {
+  color: #ddd;
+  padding:10px;
+}
+.mark-as-done.active {
+  color: #444;
+}
+/* Making the input placholder italic */
+::-webkit-input-placeholder { font-style: italic; }
+::-moz-placeholder { font-style: italic; } /* firefox 19+ */
+:-ms-input-placeholder { font-style: italic; } /* ie */
+input:-moz-placeholder { font-style: italic; }
+/* Todos body */
+div.todos ul {
+  width: 100%;
+  font-size: 1.3em;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+li.todo {
+  min-height: 40px;
+  padding: 5px 5px 5px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ededed;
+  border-top: none;
+}
+li.todo > input {
+  margin: 10px;
+  height: 20px;
+}
+li.todo > span {
+  padding-left: 10px;
+  width: 260px;
+}
+/* Bottom bar */
+.bottom-bar {
+  display: flex;
+  font-size: .8em;
+  justify-content: space-between;
+}
