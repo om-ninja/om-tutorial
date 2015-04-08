@@ -96,7 +96,6 @@
   "Given filter-key (one of :all, :active, :completed) and todos,
    return just the set of todos that should be visible."
   [filter-key todos]
-  (println filter-key)
   (case filter-key
     :all todos
     :active (vec (remove :done todos))
