@@ -1,7 +1,8 @@
 (ns ^:figwheel-always om-tut.core
     (:require[om.core :as om :include-macros true]
              [sablono.core :refer-macros [html]]
-             [alandipert.storage-atom :refer [local-storage]]))
+             [alandipert.storage-atom :refer [local-storage]]
+             [om-tut.item :refer [todo-item]]))
 
 (enable-console-print!)
 
@@ -20,18 +21,6 @@
       {:text "Become a Front-end Ninja" :done false}]
      :filter :all})
    :todos-app-state))
-
-(defn todo-item [todo owner]
-  (om/component
-   (let [cls (if (:done todo) "done" "")
-         toggle (fn [todo] (update todo :done not))]
-     (html
-      [:li {:class "todo"}
-       [:input {:class "toggle"
-                :type "checkbox"
-                :checked (:done todo)
-                :on-change #(om/transact! todo toggle)}]
-       [:span {:class cls} (:text todo)]]))))
 
 (defn add-todo [text todos]
   (conj todos {:text text :done false}))
