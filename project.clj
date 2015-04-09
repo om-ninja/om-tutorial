@@ -9,6 +9,7 @@
                  [figwheel "0.2.3-SNAPSHOT"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [sablono "0.2.3"]
+                 [prismatic/om-tools "0.3.11"]
                  [alandipert/storage-atom "1.2.4"]
                  [org.omcljs/om "0.8.6"]]
 
