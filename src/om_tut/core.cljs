@@ -2,7 +2,10 @@
     (:require[om.core :as om :include-macros true]
              [sablono.core :refer-macros [html]]
              [alandipert.storage-atom :refer [local-storage]]
-             [om-tut.item :refer [todo-item]]))
+             [om-tut.item :refer [todo-item]]
+             [om-tut.todo-actions :as t]
+             [cljs.core.async :refer [take! put! chan]])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
 
@@ -21,6 +24,7 @@
       {:text "Become a Front-end Ninja" :done false}]
      :filter :all})
    :todos-app-state))
+
 
 (defn add-todo [text todos]
   (conj todos {:text text :done false}))
@@ -54,31 +58,29 @@
   (om/component
    (html
     (let [todos (:todos data)
-          not-done-count (count (remove :done todos))
-          done-count (count (filter :done todos))
-          remove-done (fn [todos]
-                        (vec (remove :done todos)))]
+          not-done-count (count (t/active-only todos))
+          done-count (count (t/completed-only todos))]
       [:div.bottom-bar
        (str not-done-count " items left")
        (om/build filter-display data)
        [:a
           {:class (if (zero? done-count) "invisible")
            :href "#"
-           :on-click #(om/transact! todos remove-done)}
+           ; removing done is the same as only keeping only the active todos
+           :on-click #(om/transact! todos t/active-only)}
         "Clear completed"]]))))
 
 (defn mark-all-as-done [todos owner]
   (om/component
    (html
     (let [all-done? (every? identity (map :done todos))
-          mark-as (fn [value todos]
-                    (mapv #(assoc % :done value) todos))]
+          toggle-all (if all-done?
+                        t/mark-all-as-not-done
+                        t/mark-all-as-done)]
       [:a.mark-as-done
        {:href "#"
         :class (when all-done? "active")
-        :on-click #(om/transact!
-                    todos
-                    (partial mark-as (not all-done?)))}
+        :on-click #(om/transact! todos toggle-all)}
        "✔"]))))
 
 (defn filter-todos
@@ -87,22 +89,49 @@
   [filter-key todos]
   (case filter-key
     :all todos
-    :active (vec (remove :done todos))
-    :completed (vec (filter :done todos))))
+    :active (t/active-only todos)
+    :completed (t/completed-only todos)))
 
 (defn todo-list [data owner]
   (om/component
-   (html
-    [:div.todos
-     [:h1 "todos"]
-     [:div.top-bar
-      (om/build mark-all-as-done (:todos data))
-      (om/build todo-adder (:todos data))]
-     [:ul
-      (om/build-all todo-item
-                    (filter-todos (:filter data) (:todos data)))]
-     (om/build bottom-bar data)])))
+   (let [delete-todo! (fn [todo]
+                        (om/transact! data :todos
+                                      (fn [todos]
+                                        (t/remove-todo todo todos))))]
+     (html
+      [:div.todos
+       [:h1 "todos"]
+       [:div.top-bar
+        (om/build mark-all-as-done (:todos data))
+        (om/build todo-adder (:todos data))]
+       [:ul
+        (om/build-all todo-item
+                      (filter-todos (:filter data) (:todos data))
+                      {:opts {:delete-self! delete-todo!}})]
+       (om/build bottom-bar data)]))))
 
 (om/root todo-list
          app-state
          {:target (. js/document (getElementById "todos"))})
+
+(defonce app-history
+  (atom [@app-state]))
+
+(add-watch app-state :history
+  (fn [_ _ _ new-state]
+    (when-not (= (last @app-history) new-state)
+      (swap! app-history conj new-state))))
+
+(defn undo [history owner]
+  (om/component
+   (html
+    [:div
+     [:button {:on-click (fn [evt]
+                          (when (> (count history) 1)
+                            (swap! app-history pop)
+                            (reset! app-state (last @app-history))))}
+      "Undo"] (dec (count history)) " undos left."])))
+
+(om/root undo
+         app-history
+         {:target (. js/document (getElementById "undo"))})

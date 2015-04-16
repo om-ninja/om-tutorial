@@ -1,5 +1,5 @@
 /* some style */
-body {
+body, input[type="text"] {
    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
    font-weight: 300;
 }
@@ -84,9 +84,23 @@ li.todo > input {
   margin: 10px;
   height: 20px;
 }
-li.todo > span {
+li.todo input[type="text"] {
+  flex: 1;
+  font-size: 1em;
+}
+li.todo div {
   padding-left: 10px;
-  width: 260px;
+  flex: 1;
+  display:flex;
+  justify-content: space-between;
+}
+li.todo .destroy {
+  display:none;
+}
+li.todo:hover .destroy {
+  display:inline;
+  color: #d88;
+  font-weight: bold;
 }
 /* Bottom bar */
 .bottom-bar {
