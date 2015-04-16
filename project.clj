@@ -33,7 +33,7 @@
                          :cache-analysis true }}
              {:id "min"
               :source-paths ["src"]
-              :compiler {:output-to "resources/public/js/compiled/om_tut.js"
+              :compiler {:output-to "resources/public/js/om_tut.min.js"
                          :main om-tut.core
                          :optimizations :advanced
                          :pretty-print false}}]}
