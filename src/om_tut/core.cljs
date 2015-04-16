@@ -60,15 +60,16 @@
     (let [todos (:todos data)
           not-done-count (count (t/active-only todos))
           done-count (count (t/completed-only todos))]
-      [:div.bottom-bar
-       (str not-done-count " items left")
-       (om/build filter-display data)
-       [:a
+      (when (pos? (count todos))
+        [:div.bottom-bar
+         (str not-done-count " items left")
+         (om/build filter-display data)
+         [:a
           {:class (if (zero? done-count) "invisible")
            :href "#"
            ; removing done is the same as only keeping only the active todos
            :on-click #(om/transact! todos t/active-only)}
-        "Clear completed"]]))))
+          "Clear completed"]])))))
 
 (defn mark-all-as-done [todos owner]
   (om/component
@@ -77,11 +78,12 @@
           toggle-all (if all-done?
                         t/mark-all-as-not-done
                         t/mark-all-as-done)]
-      [:a.mark-as-done
-       {:href "#"
-        :class (when all-done? "active")
-        :on-click #(om/transact! todos toggle-all)}
-       "✔"]))))
+      (when (pos? (count todos))
+        [:a.mark-as-done
+         {:href "#"
+          :class (when all-done? "active")
+          :on-click #(om/transact! todos toggle-all)}
+         "✔"])))))
 
 (defn filter-todos
   "Given filter-key (one of :all, :active, :completed) and todos,
