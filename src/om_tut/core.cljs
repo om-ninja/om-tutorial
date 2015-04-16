@@ -1,6 +1,7 @@
 (ns ^:figwheel-always om-tut.core
     (:require[om.core :as om :include-macros true]
              [sablono.core :refer-macros [html]]
+             [om-tut.todo-actions :as t]
              [alandipert.storage-atom :refer [local-storage]]))
 
 (enable-console-print!)
@@ -59,3 +60,25 @@
 (om/root todo-list
          app-state
          {:target (. js/document (getElementById "todos"))})
+
+(defonce app-history
+  (atom [@app-state]))
+
+(add-watch app-state :history
+  (fn [_ _ _ new-state]
+    (when-not (= (last @app-history) new-state)
+      (swap! app-history conj new-state))))
+
+(defn undo [history owner]
+  (om/component
+   (html
+    [:div
+     [:button {:on-click (fn [evt]
+                          (when (> (count history) 1)
+                            (swap! app-history pop)
+                            (reset! app-state (last @app-history))))}
+      "Undo"] (dec (count history)) " undos left."])))
+
+(om/root undo
+         app-history
+         {:target (. js/document (getElementById "undo"))})
