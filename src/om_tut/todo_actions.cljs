@@ -49,7 +49,7 @@
 (defn active-only
   "Given a todo-list, return just the ones that are active (not done), as a vector."
   [todo-list]
-  (vec (filter done? todo-list)))
+  (vec (remove done? todo-list)))
 
 (defn mark-all-as-done
   "Given a todo-list, return a todo-list where each todo has been done."
