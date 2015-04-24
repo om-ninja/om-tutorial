@@ -84,9 +84,9 @@
    return just the set of todos that should be visible."
   [filter-key todos]
   (case filter-key
-    :all todos
     :active (t/active-only todos)
-    :completed (t/completed-only todos)))
+    :completed (t/completed-only todos)
+    todos))
 
 (defn todo-list [data owner]
   (om/component
