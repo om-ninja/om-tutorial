@@ -1,10 +1,11 @@
 (ns ^:figwheel-always om-tut.core
-    (:require[om.core :as om :include-macros true]
-             [sablono.core :refer-macros [html]]
-             [alandipert.storage-atom :refer [local-storage]]
-             [om-tut.item :refer [todo-item]]
-             [om-tut.todo-actions :as t]
-             [cljs.core.async :refer [take! put! chan]])
+    (:require [clojure.string :as string]
+              [om.core :as om :include-macros true]
+              [sablono.core :refer-macros [html]]
+              [alandipert.storage-atom :refer [local-storage]]
+              [om-tut.item :refer [todo-item]]
+              [om-tut.todo-actions :as t]
+              [cljs.core.async :refer [take! put! chan]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
@@ -15,16 +16,8 @@
 
 (defonce app-state
   (local-storage
-   (atom
-    {:todos
-     [{:text "Get started with Om" :done true}
-      {:text "Understand sablono" :done true}
-      {:text "Become an Om master" :done false}
-      {:text "Meditate" :done false}
-      {:text "Become a Front-end Ninja" :done false}]
-     :filter :all})
+   (atom {:todos []})
    :todos-app-state))
-
 
 (defn add-todo [text todos]
   (conj todos {:text text :done false}))
@@ -36,10 +29,11 @@
      {:type "text"
       :placeholder "What needs to be done?"
       :on-key-up (fn [event]
-                   (let [input (.-target event)]
-                     (when (= 13 (.-keyCode event)) ;; ENTER
-                       (om/transact! todos
-                                     (partial add-todo (.-value input)))
+                   (let [input (.-target event)
+                         text (.-value input)]
+                     (when (and (= 13 (.-keyCode event)) ;; ENTER
+                                (not (string/blank? text)))
+                       (om/transact! todos (partial add-todo text))
                        (set! (.-value input) ""))))}])))
 
 (defn filter-display
